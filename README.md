@@ -21,6 +21,9 @@ output "talos_image_url" {
 }
 ```
 
+> [!WARNING]  
+> The output format for the URL is based on \_iso\_. These should be changed in the futur.
+
 ## Requirements
 
 | Name | Version |
@@ -58,5 +61,5 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_talos_image_url"></a> [talos\_image\_url](#output\_talos\_image\_url) | n/a |
+| <a name="output_talos_image_url"></a> [talos\_image\_url](#output\_talos\_image\_url) | Talos Generated URL ISO |
 <!-- END_TF_DOCS -->
