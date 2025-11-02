@@ -12,11 +12,7 @@ terraform {
 data "talos_image_factory_extensions_versions" "this" {
   talos_version = var.talos_version
   filters = {
-    names = [
-      "iscsi-tools",
-      "util-linux-tools",
-      "qemu-guest-agent",
-    ]
+    names = var.talos_image_extensions
   }
 }
 
