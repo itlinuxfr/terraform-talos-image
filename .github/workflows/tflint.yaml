@@ -13,7 +13,7 @@ permissions:
   security-events: write
 
 jobs:
-  lint:
+  terraform-lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
