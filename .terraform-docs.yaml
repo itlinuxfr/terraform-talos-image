@@ -2,7 +2,7 @@ formatter: "" # this is required
 
 version: ""
 
-header-from: ""
+header-from: "main.tf"
 footer-from: ""
 
 recursive:
