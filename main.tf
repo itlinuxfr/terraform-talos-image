@@ -1,3 +1,4 @@
+# Providers & Terraform Version
 terraform {
   required_version = ">= 1.12.0"
   required_providers {
@@ -16,7 +17,7 @@ data "talos_image_factory_extensions_versions" "this" {
   }
 }
 
-# Create the yaml definition for choosen extensions
+# Create the yaml manifest for choosen extensions
 resource "talos_image_factory_schematic" "this" {
   schematic = yamlencode(
     {

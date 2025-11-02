@@ -19,3 +19,6 @@ output "talos_image_url" {
   value = module.talos_image.talos_image_url
 }
 ```
+
+> [!WARNING]  
+> The output format for the URL is based on _iso_. These should be changed in the futur.
