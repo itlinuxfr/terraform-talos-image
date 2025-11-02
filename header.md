@@ -21,4 +21,4 @@ output "talos_image_url" {
 ```
 
 > [!WARNING]  
-> The output format for the URL is based on **iso**. These should be changed in the futur.
+> The output format for the URL is based on **iso**. This should be changed in the futur.
