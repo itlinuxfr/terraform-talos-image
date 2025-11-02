@@ -20,3 +20,4 @@ jobs:
         output-file: README.md
         output-method: inject
         git-push: "true"
+        git-commit-message: "Automated Terrraform docs update"
