@@ -5,17 +5,13 @@
 
 # Usage
 
-> [!WARNING]  
-> At this stage of the dev, extensions are hardcoded.
-> These extensions are coded : "iscsi-tools", "util-linux-tools", "qemu-guest-agent"
-> TODO : Should create a list for that purpose
-
 ```hcl
 # You call the module via the desired source, example as workdir :
 module "talos_image" {
   source               = "./modules/talos_image"
   talos_version        = "v1.11.3"
   talos_image_platform = "nocloud"
+  talos_image_extensions = ["iscsi-tools", "util-linux-tools", "qemu-guest-agent",]
 }
 
 # You can use as output the URL for iso download :
