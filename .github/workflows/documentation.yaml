@@ -13,6 +13,8 @@ jobs:
 
     - name: Render terraform docs and push changes back to PR
       uses: terraform-docs/gh-actions@v1.4.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         working-dir: .
         output-file: README.md
