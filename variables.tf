@@ -1,6 +1,10 @@
 variable "talos_version" {
   type        = string
   description = "Talos Version"
+  validation {
+    condition     = can(regex("^v", var.talos_version))
+    error_message = "Talos version must start with 'v' (e.g. v1.8.0)."
+  }
 }
 
 variable "talos_image_extensions" {

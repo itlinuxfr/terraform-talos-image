@@ -11,22 +11,23 @@ terraform {
 
 # Find the latest version for extensions
 data "talos_image_factory_extensions_versions" "this" {
+  count         = length(var.talos_image_extensions) > 0 ? 1 : 0
   talos_version = var.talos_version
   filters = {
     names = var.talos_image_extensions
   }
 }
 
-# Create the yaml manifest for choosen extensions
+# Create the yaml manifest for chosen extensions
 resource "talos_image_factory_schematic" "this" {
   schematic = yamlencode(
-    {
+    length(var.talos_image_extensions) > 0 ? {
       customization = {
         systemExtensions = {
-          officialExtensions = data.talos_image_factory_extensions_versions.this.extensions_info[*].name
+          officialExtensions = data.talos_image_factory_extensions_versions.this[0].extensions_info[*].name
         }
       }
-    }
+    } : {}
   )
 }
 

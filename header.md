@@ -18,6 +18,10 @@ module "talos_image" {
 output "talos_image_url" {
   value = module.talos_image.talos_image_url
 }
+
+output "talos_image_id" {
+  value = module.talos_image.schematic_id
+}
 ```
 
 > [!WARNING]  
