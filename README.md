@@ -19,6 +19,10 @@ module "talos_image" {
 output "talos_image_url" {
   value = module.talos_image.talos_image_url
 }
+
+output "talos_image_id" {
+  value = module.talos_image.schematic_id
+}
 ```
 
 > [!WARNING]  
@@ -61,5 +65,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_schematic_id"></a> [schematic\_id](#output\_schematic\_id) | Talos Image Factory Schematic ID |
 | <a name="output_talos_image_url"></a> [talos\_image\_url](#output\_talos\_image\_url) | Talos Generated URL ISO |
+| <a name="output_talos_image_urls"></a> [talos\_image\_urls](#output\_talos\_image\_urls) | Talos Generated URLs (ISO, PXE, etc) |
 <!-- END_TF_DOCS -->
