@@ -1,9 +1,10 @@
 name: terraform-test
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+  workflow_run:
+    workflows: [ "terraform-lint" ]
+    types:
+    - completed
 
 concurrency:
   group: terraform-test-${{ github.ref }}

@@ -1,7 +1,7 @@
 # Test 1: Generate a "Vanilla" image (without extensions)
 # Verify that the conditional logic (the else {} block) works correctly.
 run "generate_vanilla_image" {
-  command = plan
+  command = apply
 
   variables {
     talos_version          = "v1.9.0"
@@ -18,7 +18,7 @@ run "generate_vanilla_image" {
 # Test 2: Generate an image with extensions
 # Verify that the extensions data source call is made correctly.
 run "generate_image_with_extensions" {
-  command = plan
+  command = apply
 
   variables {
     talos_version          = "v1.9.0"

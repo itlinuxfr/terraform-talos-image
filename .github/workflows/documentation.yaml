@@ -1,7 +1,7 @@
 name: terraform-docs
 on:
   workflow_run:
-    workflows: [ "terraform-lint" ]
+    workflows: [ "terraform-lint", "terraform-test" ]
     types:
     - completed
 
