@@ -44,8 +44,9 @@ resource "talos_image_factory_schematic" "this" {
 }
 
 data "talos_image_factory_urls" "this" {
-  talos_version = var.talos_version
-  schematic_id  = talos_image_factory_schematic.this.id
-  platform      = var.platform
-  architecture  = var.architecture
+  talos_version     = var.talos_version
+  schematic_id      = talos_image_factory_schematic.this.id
+  platform          = var.platform
+  architecture      = var.architecture
+  disk_image_format = var.disk_image_format
 }

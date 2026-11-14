@@ -8,8 +8,8 @@ mock_provider "talos" {
         disk_image            = "https://factory.example/disk.raw.xz"
         disk_image_secureboot = "https://factory.example/disk-secureboot.raw.xz"
         initramfs             = "https://factory.example/initramfs.xz"
-        installer             = "factory.example/installer:v1.11.3"
-        installer_secureboot  = "factory.example/installer-secureboot:v1.11.3"
+        installer             = "factory.example/installer:v1.14.6"
+        installer_secureboot  = "factory.example/installer-secureboot:v1.14.6"
         iso                   = "https://factory.example/image.iso"
         iso_secureboot        = "https://factory.example/image-secureboot.iso"
         kernel                = "https://factory.example/kernel"
@@ -25,7 +25,7 @@ run "empty_schematic" {
   command = apply
 
   variables {
-    talos_version = "v1.11.3"
+    talos_version = "v1.14.6"
   }
 
   assert {
@@ -34,7 +34,7 @@ run "empty_schematic" {
   }
 
   assert {
-    condition     = output.iso_url == "https://factory.example/image.iso" && output.installer_image == "factory.example/installer:v1.11.3"
+    condition     = output.iso_url == "https://factory.example/image.iso" && output.installer_image == "factory.example/installer:v1.14.6"
     error_message = "Without SecureBoot the outputs must return the standard variants."
   }
 }
@@ -43,7 +43,7 @@ run "extensions_and_kernel_args" {
   command = plan
 
   variables {
-    talos_version     = "v1.11.3"
+    talos_version     = "v1.14.6"
     platform          = "nocloud"
     extensions        = ["siderolabs/qemu-guest-agent", "siderolabs/iscsi-tools"]
     extra_kernel_args = ["net.ifnames=0"]
@@ -74,7 +74,7 @@ run "unknown_extension" {
   command = plan
 
   variables {
-    talos_version = "v1.11.3"
+    talos_version = "v1.14.6"
     extensions    = ["siderolabs/does-not-exist"]
   }
 
@@ -92,12 +92,12 @@ run "secureboot_variants" {
   command = apply
 
   variables {
-    talos_version = "v1.11.3"
+    talos_version = "v1.14.6"
     secureboot    = { enabled = true }
   }
 
   assert {
-    condition     = output.iso_url == "https://factory.example/image-secureboot.iso" && output.installer_image == "factory.example/installer-secureboot:v1.11.3"
+    condition     = output.iso_url == "https://factory.example/image-secureboot.iso" && output.installer_image == "factory.example/installer-secureboot:v1.14.6"
     error_message = "With secureboot.enabled the outputs must return the SecureBoot variants."
   }
 
@@ -111,7 +111,7 @@ run "secureboot_options_in_schematic" {
   command = plan
 
   variables {
-    talos_version = "v1.11.3"
+    talos_version = "v1.14.6"
     secureboot = {
       enabled                         = true
       enroll_keys                     = "force"
@@ -127,5 +127,19 @@ run "secureboot_options_in_schematic" {
   assert {
     condition     = yamldecode(talos_image_factory_schematic.this.schematic).customization.secureboot.includeWellKnownCertificates == true
     error_message = "include_well_known_certificates must be written in the schematic."
+  }
+}
+
+run "disk_image_format_passed_to_factory" {
+  command = apply
+
+  variables {
+    talos_version     = "v1.14.6"
+    disk_image_format = "qcow2"
+  }
+
+  assert {
+    condition     = data.talos_image_factory_urls.this.disk_image_format == "qcow2"
+    error_message = "disk_image_format must be passed to the Image Factory URLs data source."
   }
 }

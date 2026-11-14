@@ -10,7 +10,7 @@ for your hypervisor, and `installer_image` to the Talos machine configuration.
 module "talos_image" {
   source = "git::https://github.com/itlinuxfr/terraform-talos-image.git?ref=v1.0.0"
 
-  talos_version = "v1.11.3"
+  talos_version = "v1.14.6"
   platform      = "nocloud"
   extensions    = ["siderolabs/qemu-guest-agent"]
 
@@ -31,7 +31,7 @@ Read [`AGENTS.md`](AGENTS.md) for conventions and commands, and [`SECURITY.md`](
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15 |
 | <a name="requirement_talos"></a> [talos](#requirement\_talos) | >= 0.12.0 |
 
 ## Providers
@@ -56,8 +56,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos Linux version, with the leading v (for example v1.11.3). | `string` | n/a | yes |
+| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos Linux version, with the leading v (for example v1.14.6). | `string` | n/a | yes |
 | <a name="input_architecture"></a> [architecture](#input\_architecture) | CPU architecture of the image. | `string` | `"amd64"` | no |
+| <a name="input_disk_image_format"></a> [disk\_image\_format](#input\_disk\_image\_format) | Format of the disk image URLs: raw, qcow2, vhd or ova, with an optional compression suffix (.tar.gz, .gz, .xz or .zst), for example qcow2 or raw.zst. Null keeps the platform default. Not allowed for a platform without a disk image. | `string` | `null` | no |
 | <a name="input_extensions"></a> [extensions](#input\_extensions) | Official system extensions to include, with their full name (for example siderolabs/qemu-guest-agent). An unknown name fails the plan. | `list(string)` | `[]` | no |
 | <a name="input_extra_kernel_args"></a> [extra\_kernel\_args](#input\_extra\_kernel\_args) | Extra kernel arguments baked into the image (for example net.ifnames=0). | `list(string)` | `[]` | no |
 | <a name="input_platform"></a> [platform](#input\_platform) | Image Factory platform, for example metal, nocloud, aws or hcloud. See the Talos Image Factory documentation for the full list. | `string` | `"metal"` | no |

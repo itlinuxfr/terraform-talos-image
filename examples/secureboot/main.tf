@@ -2,13 +2,13 @@
 # Use iso_url to boot the machine and installer_image in the Talos machine configuration (machine.install.image).
 
 terraform {
-  required_version = ">= 1.9"
+  required_version = ">= 1.15"
 }
 
 module "talos_image" {
   source = "../../"
 
-  talos_version = "v1.11.3"
+  talos_version = "v1.14.6"
   platform      = "nocloud"
   extensions    = ["siderolabs/qemu-guest-agent"]
 

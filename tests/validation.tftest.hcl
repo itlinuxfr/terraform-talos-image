@@ -16,7 +16,7 @@ run "invalid_architecture" {
   command = plan
 
   variables {
-    talos_version = "v1.11.3"
+    talos_version = "v1.14.6"
     architecture  = "x86"
   }
 
@@ -27,7 +27,7 @@ run "empty_kernel_argument" {
   command = plan
 
   variables {
-    talos_version     = "v1.11.3"
+    talos_version     = "v1.14.6"
     extra_kernel_args = ["quiet", " "]
   }
 
@@ -38,9 +38,29 @@ run "invalid_enroll_keys" {
   command = plan
 
   variables {
-    talos_version = "v1.11.3"
+    talos_version = "v1.14.6"
     secureboot    = { enroll_keys = "always" }
   }
 
   expect_failures = [var.secureboot]
+}
+
+run "invalid_disk_image_format" {
+  command = plan
+
+  variables {
+    talos_version     = "v1.14.6"
+    disk_image_format = "iso"
+  }
+
+  expect_failures = [var.disk_image_format]
+}
+
+run "valid_disk_image_format_with_compression" {
+  command = plan
+
+  variables {
+    talos_version     = "v1.14.6"
+    disk_image_format = "raw.zst"
+  }
 }

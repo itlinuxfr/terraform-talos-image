@@ -1,11 +1,11 @@
 variable "talos_version" {
-  description = "Talos Linux version, with the leading v (for example v1.11.3)."
+  description = "Talos Linux version, with the leading v (for example v1.14.6)."
   type        = string
   nullable    = false
 
   validation {
     condition     = can(regex("^v[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.]+)?$", var.talos_version))
-    error_message = "The Talos version must look like v1.11.3 (leading v, three numbers, optional pre-release suffix)."
+    error_message = "The Talos version must look like v1.14.6 (leading v, three numbers, optional pre-release suffix)."
   }
 }
 
@@ -66,5 +66,16 @@ variable "secureboot" {
   validation {
     condition     = var.secureboot.enroll_keys == null ? true : contains(["off", "manual", "if-safe", "force"], var.secureboot.enroll_keys)
     error_message = "secureboot.enroll_keys must be off, manual, if-safe or force."
+  }
+}
+
+variable "disk_image_format" {
+  description = "Format of the disk image URLs: raw, qcow2, vhd or ova, with an optional compression suffix (.tar.gz, .gz, .xz or .zst), for example qcow2 or raw.zst. Null keeps the platform default. Not allowed for a platform without a disk image."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.disk_image_format == null ? true : can(regex("^(raw|qcow2|vhd|ova)(\\.(tar\\.gz|gz|xz|zst))?$", var.disk_image_format))
+    error_message = "disk_image_format must be raw, qcow2, vhd or ova, with an optional suffix .tar.gz, .gz, .xz or .zst."
   }
 }

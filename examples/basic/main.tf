@@ -4,13 +4,13 @@
 # The relative source is used by CI: it tests the code of the current branch.
 
 terraform {
-  required_version = ">= 1.9"
+  required_version = ">= 1.15"
 }
 
 module "talos_image" {
   source = "../../"
 
-  talos_version = "v1.11.3"
+  talos_version = "v1.14.6"
   platform      = "nocloud"
   extensions    = ["siderolabs/qemu-guest-agent"]
 }
