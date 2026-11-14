@@ -1,45 +1,44 @@
-<!-- BEGIN_TF_DOCS -->
-[![terraform-docs](https://github.com/itlinuxfr/terraform-talos-image/actions/workflows/documentation.yaml/badge.svg)](https://github.com/itlinuxfr/terraform-talos-image/actions/workflows/documentation.yaml)
-[![terraform-lint](https://github.com/itlinuxfr/terraform-talos-image/actions/workflows/tflint.yaml/badge.svg)](https://github.com/itlinuxfr/terraform-talos-image/actions/workflows/tflint.yaml)
-[![Provider: siderolabs/talos](https://img.shields.io/badge/provider-siderolabs%2Ftalos-623CE4?logo=terraform)](https://registry.terraform.io/providers/siderolabs/talos/latest)
-[![Provider: siderolabs/talos v0.9.0](https://img.shields.io/badge/provider%3A%20siderolabs%2Ftalos-v0.9.0-623CE4?logo=terraform)](https://registry.terraform.io/providers/siderolabs/talos)
+# terraform-talos-image
 
-# Usage
+Generates a [Talos Linux Image Factory](https://factory.talos.dev) schematic and the URLs of the matching images: ISO, installer,
+disk image, PXE and more. The module does not download or upload anything: pass `iso_url` to the module that fetches the image
+for your hypervisor, and `installer_image` to the Talos machine configuration.
+
+## Usage
 
 ```hcl
-# You call the module via the desired source, example as workdir :
 module "talos_image" {
-  source               = "./modules/talos_image"
-  talos_version        = "v1.11.3"
-  talos_image_platform = "nocloud"
-  talos_image_extensions = ["iscsi-tools", "util-linux-tools", "qemu-guest-agent",]
-}
+  source = "git::https://github.com/itlinuxfr/terraform-talos-image.git?ref=v1.0.0"
 
-# You can use as output the URL for iso download :
-output "talos_image_url" {
-  value = module.talos_image.talos_image_url
-}
+  talos_version = "v1.11.3"
+  platform      = "nocloud"
+  extensions    = ["siderolabs/qemu-guest-agent"]
 
-output "talos_image_id" {
-  value = module.talos_image.schematic_id
+  secureboot = { enabled = true }
 }
 ```
 
-> [!WARNING]  
-> The output format for the URL is based on **iso**. This should be changed in the futur.
+An extension name that does not exist for the chosen Talos version fails `terraform plan`. The plan queries the Image Factory,
+so it needs network access.
 
+See the [`examples/`](examples/) directory for complete examples.
+
+## Contributing
+Read [`AGENTS.md`](AGENTS.md) for conventions and commands, and [`SECURITY.md`](SECURITY.md) for security rules.
+
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.12.0 |
-| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.9.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9 |
+| <a name="requirement_talos"></a> [talos](#requirement\_talos) | >= 0.12.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.9.0 |
+| <a name="provider_talos"></a> [talos](#provider\_talos) | >= 0.12.0 |
 
 ## Modules
 
@@ -49,23 +48,27 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [talos_image_factory_schematic.this](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/resources/image_factory_schematic) | resource |
-| [talos_image_factory_extensions_versions.this](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/data-sources/image_factory_extensions_versions) | data source |
-| [talos_image_factory_urls.this](https://registry.terraform.io/providers/siderolabs/talos/0.9.0/docs/data-sources/image_factory_urls) | data source |
+| [talos_image_factory_schematic.this](https://registry.terraform.io/providers/siderolabs/talos/latest/docs/resources/image_factory_schematic) | resource |
+| [talos_image_factory_extensions_versions.this](https://registry.terraform.io/providers/siderolabs/talos/latest/docs/data-sources/image_factory_extensions_versions) | data source |
+| [talos_image_factory_urls.this](https://registry.terraform.io/providers/siderolabs/talos/latest/docs/data-sources/image_factory_urls) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_talos_image_extensions"></a> [talos\_image\_extensions](#input\_talos\_image\_extensions) | Talos Image Extensions | `list(string)` | `[]` | no |
-| <a name="input_talos_image_platform"></a> [talos\_image\_platform](#input\_talos\_image\_platform) | Talos Platform Type for Image | `string` | n/a | yes |
-| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos Version | `string` | n/a | yes |
+| <a name="input_talos_version"></a> [talos\_version](#input\_talos\_version) | Talos Linux version, with the leading v (for example v1.11.3). | `string` | n/a | yes |
+| <a name="input_architecture"></a> [architecture](#input\_architecture) | CPU architecture of the image. | `string` | `"amd64"` | no |
+| <a name="input_extensions"></a> [extensions](#input\_extensions) | Official system extensions to include, with their full name (for example siderolabs/qemu-guest-agent). An unknown name fails the plan. | `list(string)` | `[]` | no |
+| <a name="input_extra_kernel_args"></a> [extra\_kernel\_args](#input\_extra\_kernel\_args) | Extra kernel arguments baked into the image (for example net.ifnames=0). | `list(string)` | `[]` | no |
+| <a name="input_platform"></a> [platform](#input\_platform) | Image Factory platform, for example metal, nocloud, aws or hcloud. See the Talos Image Factory documentation for the full list. | `string` | `"metal"` | no |
+| <a name="input_secureboot"></a> [secureboot](#input\_secureboot) | SecureBoot options.<br/>- enabled: the iso\_url and installer\_image outputs return the SecureBoot variants.<br/>- enroll\_keys: how the image enrolls the SecureBoot keys on first boot: off, manual, if-safe or force.<br/>  Null keeps the Image Factory default (if-safe: enrolls only inside a virtual machine).<br/>- include\_well\_known\_certificates: add well-known UEFI certificates to the enrollment database. | <pre>object({<br/>    enabled                         = optional(bool, false)<br/>    enroll_keys                     = optional(string)<br/>    include_well_known_certificates = optional(bool, false)<br/>  })</pre> | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_schematic_id"></a> [schematic\_id](#output\_schematic\_id) | Talos Image Factory Schematic ID |
-| <a name="output_talos_image_url"></a> [talos\_image\_url](#output\_talos\_image\_url) | Talos Generated URL ISO |
-| <a name="output_talos_image_urls"></a> [talos\_image\_urls](#output\_talos\_image\_urls) | Talos Generated URLs (ISO, PXE, etc) |
+| <a name="output_installer_image"></a> [installer\_image](#output\_installer\_image) | Installer image for machine.install.image, the SecureBoot variant when secureboot.enabled is true. |
+| <a name="output_iso_url"></a> [iso\_url](#output\_iso\_url) | ISO URL, the SecureBoot variant when secureboot.enabled is true. |
+| <a name="output_schematic_id"></a> [schematic\_id](#output\_schematic\_id) | Image Factory schematic ID. |
+| <a name="output_urls"></a> [urls](#output\_urls) | All asset URLs of the Image Factory (iso, installer, disk\_image, pxe, kernel, initramfs, uki and their SecureBoot variants). An asset that is not available gives an empty string. |
 <!-- END_TF_DOCS -->
